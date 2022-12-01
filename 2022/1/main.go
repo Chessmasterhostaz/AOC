@@ -17,8 +17,8 @@ func main() {
 
 func Max(in *[]int) int {
 	m := 0
-	for i, e := range *in {
-		if i == 0 || e > m {
+	for _, e := range *in {
+		if e > m {
 			m = e
 		}
 	}
@@ -29,8 +29,8 @@ func Max3(in *[]int) int {
 	m2 := 0
 	m1 := 0
 	m := 0
-	for i, e := range *in {
-		if i == 0 || e > m {
+	for _, e := range *in {
+		if e > m {
 			m2 = m1
 			m1 = m
 			m = e
@@ -40,8 +40,8 @@ func Max3(in *[]int) int {
 }
 
 func problem(inputs []string) {
-	var elves []int
-	elves = append(elves, 0)
+	elves := []int{0}
+
 	var idx int
 	for _, v := range inputs {
 		if v != "" {
@@ -56,8 +56,8 @@ func problem(inputs []string) {
 		}
 	}
 
-	fmt.Printf("Day 1: %d", Max(&elves))
-	fmt.Printf("Day 2: %d", Max3(&elves))
+	fmt.Printf("Task 1: %d\n", Max(&elves))
+	fmt.Printf("Task 2: %d\n", Max3(&elves))
 }
 
 func readInput() []string {
