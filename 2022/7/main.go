@@ -34,37 +34,29 @@ func problem(inputs []string) {
 				}
 
 			} else { // ls
-				idx := i + 1
-				for {
+				for idx := i + 1; idx < len(inputs); idx++ {
 					row := inputs[idx]
 					if row[0] == '$' {
 						break
 					} else if row[0] != 'd' {
 						vals := strings.Split(row, " ")
 						size, _ := strconv.Atoi(vals[0])
-						name := vals[1]
-						files[fmt.Sprintf("%s%s/", pwd, name)] = size
-					}
-
-					if idx++; idx == len(inputs) {
-						break
+						files[fmt.Sprintf("%s%s/", pwd, vals[1])] = size
 					}
 				}
 			}
 		}
 	}
 
-	for k, v := range files {
+	for dir, v := range files {
 		if v != 0 {
-			paths := strings.Split(k, "/")
-			paths = paths[:len(paths)-1]
-			dirpath := k
-			for i := len(paths) - 1; i >= 0; i-- {
-				dirpath = dirpath[:(len(dirpath) - 1 - len(paths[i]))]
-				if dirpath == "" {
-					dirpath = "/"
+			subdirs := strings.Split(dir[:len(dir)-1], "/")
+			for i := len(subdirs) - 1; i >= 0; i-- {
+				dir = dir[:(len(dir) - 1 - len(subdirs[i]))]
+				if dir == "" {
+					dir = "/"
 				}
-				maps[dirpath] += v
+				maps[dir] += v
 			}
 		}
 	}
