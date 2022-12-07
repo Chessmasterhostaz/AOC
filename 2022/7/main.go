@@ -20,24 +20,17 @@ func problem(inputs []string) {
 	files := make(map[string]int)
 	maps := make(map[string]int)
 
-	pwd := "/"
+	pwd := ""
 	for i, v := range inputs {
 		if v[0] == '$' {
 			if v[2] == 'c' {
 				if v[5:] == "/" {
-					pwd = "/"
+					pwd = ""
 				} else if v[5:] == ".." {
-					ps := strings.Split(pwd, "/")
-					pwd = pwd[:len(pwd)-1-len(ps[len(ps)-1])]
-					if pwd == "" {
-						pwd = "/"
-					}
+					ps := strings.Split(pwd, "/") // ps= PäronSplit
+					pwd = pwd[:len(pwd)-1-len(ps[len(ps)-2])]
 				} else {
-					if pwd == "/" {
-						pwd = fmt.Sprintf("/%s", v[5:])
-					} else {
-						pwd = fmt.Sprintf("%s/%s", pwd, v[5:])
-					}
+					pwd = fmt.Sprintf("%s%s/", pwd, v[5:])
 				}
 
 			} else { // ls
@@ -46,26 +39,14 @@ func problem(inputs []string) {
 					row := inputs[idx]
 					if row[0] == '$' {
 						break
-					}
-					if row[0] == 'd' {
-						if pwd == "/" {
-							maps[fmt.Sprintf("/%s", row[4:])] = 0
-						} else {
-							maps[fmt.Sprintf("%s/%s", pwd, row[4:])] = 0
-						}
-					} else {
+					} else if row[0] != 'd' {
 						vals := strings.Split(row, " ")
 						size, _ := strconv.Atoi(vals[0])
 						name := vals[1]
-
-						if pwd == "/" {
-							files[fmt.Sprintf("/%s", name)] = size
-						} else {
-							files[fmt.Sprintf("%s/%s", pwd, name)] = size
-						}
+						files[fmt.Sprintf("%s%s/", pwd, name)] = size
 					}
-					idx++
-					if idx == len(inputs) {
+
+					if idx++; idx == len(inputs) {
 						break
 					}
 				}
@@ -75,7 +56,8 @@ func problem(inputs []string) {
 
 	for k, v := range files {
 		if v != 0 {
-			paths := strings.Split(k, "/")[1:]
+			paths := strings.Split(k, "/")
+			paths = paths[:len(paths)-1]
 			dirpath := k
 			for i := len(paths) - 1; i >= 0; i-- {
 				dirpath = dirpath[:(len(dirpath) - 1 - len(paths[i]))]
